@@ -17,6 +17,8 @@
  * @brief   Constants used by more than one source code file.
  */
 
+#include <math.h>
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 

@@ -20,6 +20,8 @@
  * these functions require the library's major version be increased.
  */
 
+#import <CoreFoundation/CoreFoundation.h>
+
 #ifndef H3API_H
 #define H3API_H
 
@@ -70,24 +72,24 @@ typedef uint64_t H3Index;
     @brief latitude/longitude in radians
 */
 typedef struct {
-    double lat;  ///< latitude in radians
-    double lon;  ///< longitude in radians
+    double lat CF_SWIFT_NAME(latitudeInRadians);  ///< latitude in radians
+    double lon CF_SWIFT_NAME(longitudeInRadians);  ///< longitude in radians
 } GeoCoord;
 
 /** @struct GeoBoundary
     @brief cell boundary in latitude/longitude
 */
 typedef struct {
-    int numVerts;                          ///< number of vertices
-    GeoCoord verts[MAX_CELL_BNDRY_VERTS];  ///< vertices in ccw order
+    int numVerts                         CF_SWIFT_NAME(__numVerts);  ///< number of vertices
+    GeoCoord verts[MAX_CELL_BNDRY_VERTS] CF_SWIFT_NAME(__verts);  ///< vertices in ccw order
 } GeoBoundary;
 
 /** @struct Geofence
  *  @brief similar to GeoBoundary, but requires more alloc work
  */
 typedef struct {
-    int numVerts;
-    GeoCoord *verts;
+    int numVerts    CF_SWIFT_NAME(__numVerts);
+    GeoCoord *verts CF_SWIFT_NAME(__verts);
 } Geofence;
 
 /** @struct GeoPolygon
@@ -95,16 +97,16 @@ typedef struct {
  */
 typedef struct {
     Geofence geofence;  ///< exterior boundary of the polygon
-    int numHoles;       ///< number of elements in the array pointed to by holes
-    Geofence *holes;    ///< interior boundaries (holes) in the polygon
+    int numHoles       CF_SWIFT_NAME(__numHoles);       ///< number of elements in the array pointed to by holes
+    Geofence *holes    CF_SWIFT_NAME(__holes);    ///< interior boundaries (holes) in the polygon
 } GeoPolygon;
 
 /** @struct GeoMultiPolygon
  *  @brief Simplified core of GeoJSON MultiPolygon coordinates definition
  */
 typedef struct {
-    int numPolygons;
-    GeoPolygon *polygons;
+    int numPolygons      CF_SWIFT_NAME(__numPolygons);
+    GeoPolygon *polygons CF_SWIFT_NAME(__polygons);
 } GeoMultiPolygon;
 
 /** @struct LinkedGeoCoord
@@ -152,7 +154,7 @@ typedef struct {
  */
 /** @brief find the H3 index of the resolution res cell containing the lat/lng
  */
-H3Index H3_EXPORT(geoToH3)(const GeoCoord *g, int res);
+H3Index H3_EXPORT(geoToH3)(const GeoCoord *g, int res) CF_SWIFT_NAME(__geoToH3(_:_:));
 /** @} */
 
 /** @defgroup h3ToGeo h3ToGeo
@@ -160,7 +162,7 @@ H3Index H3_EXPORT(geoToH3)(const GeoCoord *g, int res);
  * @{
  */
 /** @brief find the lat/lon center point g of the cell h3 */
-void H3_EXPORT(h3ToGeo)(H3Index h3, GeoCoord *g);
+void H3_EXPORT(h3ToGeo)(H3Index h3, GeoCoord *g) CF_SWIFT_NAME(__h3ToGeo(_:_:));
 /** @} */
 
 /** @defgroup h3ToGeoBoundary h3ToGeoBoundary
@@ -168,7 +170,7 @@ void H3_EXPORT(h3ToGeo)(H3Index h3, GeoCoord *g);
  * @{
  */
 /** @brief give the cell boundary in lat/lon coordinates for the cell h3 */
-void H3_EXPORT(h3ToGeoBoundary)(H3Index h3, GeoBoundary *gp);
+void H3_EXPORT(h3ToGeoBoundary)(H3Index h3, GeoBoundary *gp) CF_SWIFT_NAME(__h3ToGeoBoundary(_:_:));
 /** @} */
 
 /** @defgroup kRing kRing
@@ -286,7 +288,7 @@ int64_t H3_EXPORT(numHexagons)(int res);
  * @{
  */
 /** @brief returns the number of resolution 0 cells (hexagons and pentagons) */
-int H3_EXPORT(res0IndexCount)();
+int H3_EXPORT(res0IndexCount)(void);
 
 /** @brief provides all base cells in H3Index format*/
 void H3_EXPORT(getRes0Indexes)(H3Index *out);
@@ -297,7 +299,7 @@ void H3_EXPORT(getRes0Indexes)(H3Index *out);
  * @{
  */
 /** @brief returns the number of pentagons per resolution */
-int H3_EXPORT(pentagonIndexCount)();
+int H3_EXPORT(pentagonIndexCount)(void);
 
 /** @brief generates all pentagons at the specified resolution */
 void H3_EXPORT(getPentagonIndexes)(int res, H3Index *out);
